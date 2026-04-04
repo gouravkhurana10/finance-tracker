@@ -73,7 +73,8 @@ jobs:
           java -jar target/*.jar &
           echo "Waiting for backend to start..."
           sleep 40
-        name: Verify backend is running
+
+      - name: Verify backend is running
         run: |
           curl --retry 10 --retry-delay 5 --retry-connrefused \
           http://localhost:8080/api/auth/register || true
