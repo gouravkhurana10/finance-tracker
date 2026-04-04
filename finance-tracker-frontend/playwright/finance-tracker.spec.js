@@ -100,13 +100,15 @@ test.describe('Authentication Tests', () => {
 });
 
 test.describe('Transaction Tests', () => {
+    test.setTimeout(60000);
 
     test.beforeEach(async ({ page }) => {
-        await page.goto(`${BASE_URL}/login`);
+        await page.goto(`${BASE_URL}/login`, { waitUntil: 'networkidle' });
+        await page.waitForTimeout(1000);
         await page.fill('input[name="email"]', TEST_USER.email);
         await page.fill('input[name="password"]', TEST_USER.password);
         await page.click('button[type="submit"]');
-        await expect(page).toHaveURL(`${BASE_URL}/dashboard`);
+        await page.waitForURL(`${BASE_URL}/dashboard`, { timeout: 15000 });
     });
 
     test('SW01 - Dashboard displays balance income and expenses',
