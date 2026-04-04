@@ -1,0 +1,99 @@
+name: Finance Tracker CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  unit-tests:
+    name: Jest Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: finance-tracker-frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: finance-tracker-frontend
+        run: npm ci
+
+      - name: Run Jest unit tests
+        working-directory: finance-tracker-frontend
+        run: npm run test -- --run
+
+  e2e-tests:
+    name: Playwright E2E Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: finance-tracker-frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: finance-tracker-frontend
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: finance-tracker-frontend
+        run: npx playwright install --with-deps chromium
+
+      - name: Start backend with Docker
+        run: |
+          docker-compose up -d mysql backend
+          echo "Waiting for backend to be ready..."
+          sleep 30
+
+      - name: Start frontend dev server
+        working-directory: finance-tracker-frontend
+        run: npm run dev &
+
+      - name: Wait for frontend
+        run: npx wait-on http://localhost:5173 --timeout 30000
+
+      - name: Run Playwright E2E tests
+        working-directory: finance-tracker-frontend
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: finance-tracker-frontend/playwright-report/
+
+  build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: [unit-tests, e2e-tests]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build backend Docker image
+        run: |
+          docker build -t finance-tracker-backend \
+          ./finance-tracker-backend
+
+      - name: Build frontend Docker image
+        run: |
+          docker build -t finance-tracker-frontend \
+          ./finance-tracker-frontend
