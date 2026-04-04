@@ -26,9 +26,9 @@ test.describe('Authentication Tests', () => {
         // Wait 3 seconds for any response
         await page.waitForTimeout(3000);
 
-        // Check if we're on dashboard already
+        // Checking if we are on dashboard already
         if (!page.url().includes('/dashboard')) {
-            // Email exists — login instead
+            // If email already exists — login instead
             await page.goto(`${BASE_URL}/login`);
             await page.waitForTimeout(1000);
             await page.fill('input[name="email"]', TEST_USER.email);
