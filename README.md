@@ -74,7 +74,9 @@ A full-stack Personal Finance Tracker web application built with Java Spring Boo
 | Docker | Containerization |
 | Docker Compose | Multi-container orchestration |
 | GitHub Actions | CI/CD pipeline |
-| Railway | Cloud deployment |
+| Vercel | Frontend deployment |
+| Render | Backend deployment |
+| Clever Cloud | Database hosting |
 | Nginx | Production web server |
 
 ---
@@ -82,24 +84,22 @@ A full-stack Personal Finance Tracker web application built with Java Spring Boo
 ## Architecture
 ```
 ┌─────────────────────────────────────────────────────┐
-│                    Client Browser                   │
+│               Client Browser                        │
 └─────────────────────┬───────────────────────────────┘
                       │ HTTPS
 ┌─────────────────────▼───────────────────────────────┐
 │              React Frontend (Nginx)                 │
-│         https://finance-tracker-project             │
-│                  .up.railway.app                    │
+│    https://finance-tracker-nine-cyan.vercel.app     │
 └─────────────────────┬───────────────────────────────┘
                       │ REST API + JWT
 ┌─────────────────────▼───────────────────────────────┐
 │           Spring Boot Backend (Java 17)             │
-│       https://finance-tracker-production            │
-│              -4fa1.up.railway.app                   │
+│  https://finance-tracker-backend-j5pw.onrender.com  |
 └─────────────────────┬───────────────────────────────┘
                       │ JDBC
 ┌─────────────────────▼───────────────────────────────┐
 │                MySQL Database                       │
-│            Railway Managed MySQL 8.0                │
+│         Clever Cloud Managed MySQL 8.0              │
 └─────────────────────────────────────────────────────┘
 ```
 
