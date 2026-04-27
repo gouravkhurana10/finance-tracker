@@ -4,7 +4,7 @@
 
 A full-stack Personal Finance Tracker web application built with Java Spring Boot and React. Features JWT authentication, interactive dashboards with charts, transaction management, Docker containerization, and a comprehensive automated test suite.
 
-🌐 **Live Demo:** [https://finance-tracker-project.up.railway.app](https://finance-tracker-project.up.railway.app)
+🌐 **Live Demo:** [https://finance-tracker-nine-cyan.vercel.app](https://finance-tracker-nine-cyan.vercel.app)
 
 ---
 
